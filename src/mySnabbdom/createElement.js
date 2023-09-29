@@ -1,5 +1,5 @@
 //真正创建节点
-export default function (vnode) {
+export default function createElement(vnode) {
   //接收vnode创建真实dom节点
   const domNode = document.createElement(vnode.sel);
   // 有子节点还是有文本？
@@ -11,6 +11,13 @@ export default function (vnode) {
     vnode.elm = domNode
   } else if (Array.isArray(vnode.children) && vnode.children.length > 0) {
     //内部有子节点,需要使用递归处理
+    for (let i = 0; i < vnode.children.length; i++) {
+      let ch = vnode.children[i];
+      console.log(ch);
+      const chDom = createElement(ch)
+      domNode.appendChild(chDom)
+    }
+    vnode.elm = domNode
   }
   // console.log(vnode.elm);  得到真实dom节点
   return vnode.elm

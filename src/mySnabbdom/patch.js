@@ -16,6 +16,10 @@ export default function (oldVnode, newVnode) {   //newVnode 为调用h函数返�
     const newVnodeElm = createElement(newVnode)
     //创建真实dom节点
     //parentNode为获取标杆节点的父元素 insertBefore为插入到标杆节点之前
-    oldVnode.elm.parentNode.insertBefore(newVnodeElm, oldVnode.elm)
+    if (oldVnode.elm.parentNode && newVnodeElm) {
+      oldVnode.elm.parentNode.insertBefore(newVnodeElm, oldVnode.elm)
+      //删除老节点
+      oldVnode.elm.parentNode.removeChild(oldVnode.elm)
+    }
   }
 }
