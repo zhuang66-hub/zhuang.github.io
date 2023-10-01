@@ -74,11 +74,11 @@ export default function updateChildren(parentElm, oldCh, newCh) {
       // insertBefore方法的标杆如果为null的话会自动识别把要创建的节点安排到末尾
       parentElm.insertBefore(createElement(newCh[i]), before)
     }
-  } else if (oldStartIdx < oldEndIdx) {
+  } else if (oldStartIdx <= oldEndIdx) {
     console.log('旧节点还有没有处理的节点');
     //那么就是删除操作
     for (let i = oldStartIdx; i <= oldEndIdx; i++) {
-      parentElm.removeChild(oldCh[i])
+      parentElm.removeChild(oldCh[i].elm)
     }
   }
 }

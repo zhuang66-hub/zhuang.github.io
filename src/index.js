@@ -23,10 +23,8 @@ patch(container, myVnode1)
 const myVnode2 = h('ul', {}, [h('li', { key: 'A' }, 'A'),
 h('li', { key: 'B' }, 'B'),
 h('li', { key: 'C' }, 'C'),
-h('li', { key: 'D' }, 'D'),
 h('li', { key: 'E' }, 'E'),
-h('li', { key: 'F' }, 'F'),
-h('li', { key: 'G' }, 'G'),
+
 ])
 document.getElementById('btn').onclick = function () {
   patch(myVnode1, myVnode2)
