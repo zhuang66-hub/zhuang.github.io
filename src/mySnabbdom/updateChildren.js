@@ -48,7 +48,7 @@ export default function updateChildren(parentElm, oldCh, newCh) {
       //当新后和旧前命中时,此时要移动节点,移动新前指向的这个节点到老节点的旧后的后面
       //如何移动节点? 只要插入一个已经在dom树上的节点,它就会被移动
       //为什么插入的是oldStartVnode 因为上面调用patchVnode(oldStartVnode, newEndVnode)已经将newEndVnode赋值给oldStartVnode了
-      parentElm.insertBefore(oldStartVnode.elm, oldEndVnode.elm.nextSibling)
+      parentElm.insertBefore(oldStartVnode.elm, oldEndVnode.elm.nextSibling)  //如果标杆为null/undefined 那么就相当于在最后插入
       oldStartVnode = oldCh[++oldStartIdx]
       newEndVnode = newCh[--newEndIdx]
     } else if (CheckSameVnode(oldEndVnode, newStartVnode)) {
@@ -64,8 +64,21 @@ export default function updateChildren(parentElm, oldCh, newCh) {
     }
   }
   // 继续看看有没有剩余的
-  if (newStartIdx < newEndIdx) {
+  if (newStartIdx <= newEndIdx) {
     console.log('新节点还有没有处理的节点');
-
+    //那么就是添加操作
+    // 设置一个标杆
+    const before = newCh[newEndIdx + 1] == null ? null : newCh[newEndIdx + 1].elm  //注意双等于的话 undefined等于null
+    //继续处理未上树的节点
+    for (let i = newStartIdx; i <= newEndIdx; i++) {
+      // insertBefore方法的标杆如果为null的话会自动识别把要创建的节点安排到末尾
+      parentElm.insertBefore(createElement(newCh[i]), before)
+    }
+  } else if (oldStartIdx < oldEndIdx) {
+    console.log('旧节点还有没有处理的节点');
+    //那么就是删除操作
+    for (let i = oldStartIdx; i <= oldEndIdx; i++) {
+      parentElm.removeChild(oldCh[i])
+    }
   }
 }

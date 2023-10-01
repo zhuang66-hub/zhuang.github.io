@@ -12,7 +12,7 @@ const myVnode1 = h('ul', {},
   h('li', { key: 'B' }, 'B'),
   h('li', { key: 'C' }, 'C'),
   h('li', { key: 'D' }, 'D'),
-  h('li', { key: 'E' }, 'HAHA'),
+  h('li', { key: 'E' }, 'E'),
   ])
 console.log(myVnode1);
 
@@ -20,11 +20,13 @@ const container = document.getElementById('container')  //获取容器
 patch(container, myVnode1)
 
 //第二次上树 比较新旧节点patch做出相应的更新
-const myVnode2 = h('ul', {}, [h('li', { key: 'E' }, 'h'),
-h('li', { key: 'D' }, 'D'),
-h('li', { key: 'C' }, 'C'),
+const myVnode2 = h('ul', {}, [h('li', { key: 'A' }, 'A'),
 h('li', { key: 'B' }, 'B'),
-h('li', { key: 'A' }, 'A'),
+h('li', { key: 'C' }, 'C'),
+h('li', { key: 'D' }, 'D'),
+h('li', { key: 'E' }, 'E'),
+h('li', { key: 'F' }, 'F'),
+h('li', { key: 'G' }, 'G'),
 ])
 document.getElementById('btn').onclick = function () {
   patch(myVnode1, myVnode2)

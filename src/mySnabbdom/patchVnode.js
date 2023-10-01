@@ -10,7 +10,7 @@ export default function patchVNode(oldVnode, newVnode) {
   //不是同一个对象
   // 第一种情况 新Vnode有text属性(没有children)
   if (newVnode.text !== undefined && (newVnode.children == undefined || newVnode.children.length == 0)) {
-    console.log('新节点有text属性');
+    // console.log('新节点有text属性');
     // 判断text属性是否相同  如果相同什么都不做
     if (newVnode.text !== oldVnode.text) {
       oldVnode.elm.innerText = newVnode.text   //用新节点的text属性覆盖旧节点(如果oldVnode是children同样可以innerText也可以覆盖)
