@@ -1,5 +1,6 @@
 import vnode from './vnode.js'
 import createElement from './createElement.js'
+import patchVnode from './patchVnode.js'
 export default function (oldVnode, newVnode) {   //newVnode 为调用h函数返回的对象
   //判断传入的第一个节点是DOM节点还是虚拟节点
   if (oldVnode.sel === '' || oldVnode.sel === undefined) {
@@ -9,8 +10,8 @@ export default function (oldVnode, newVnode) {   //newVnode 为调用h函数返�
   }
   // 判断oldVnode和newVnode是不是同一个节点
   if (oldVnode.sel === newVnode.sel && oldVnode.key === newVnode.key) {
-    //旧节点和新节点是同一个节点，需要精细化比较
-
+    //是同一个节点走的逻辑
+    patchVnode(oldVnode, newVnode)
   } else {
     // 重新渲染，先插入新节点，再删除老节点
     const newVnodeElm = createElement(newVnode)

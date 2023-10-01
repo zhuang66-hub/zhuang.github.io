@@ -4,6 +4,7 @@ export default function (sel, data, children, text, elm) {
   // children为子节点
   // text为内容
   // elm为对应的真实dom节点
+  const key = data.key
 
-  return { sel, data, children, text, elm }
+  return { sel, data, children, text, elm, key }
 }
