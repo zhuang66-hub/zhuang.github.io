@@ -34,4 +34,5 @@ export default function patchVNode(oldVnode, newVnode) {
 
     }
   }
+  newVnode.elm = oldVnode.elm
 }

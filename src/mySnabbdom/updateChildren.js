@@ -26,10 +26,20 @@ export default function updateChildren(parentElm, oldCh, newCh) {
   // 旧后节点 
   let oldEndVnode = oldCh[oldEndIdx]
   // console.log(oldStartIdx, newEndIdx);
+  let keyMap = null
   // 开始节点更新策略
   while (oldStartIdx <= oldEndIdx && newStartIdx <= newEndIdx) {
     // console.log('循环了');
-    if (CheckSameVnode(oldStartVnode, newStartVnode)) {
+    // 判断是不是已经主动标记处理过的节点  注意在双等于中 undefined== null
+    if (oldStartVnode == null) {
+      oldStartVnode = oldCh[++oldStartIdx]
+    } else if (oldEndVnode == null) {
+      oldEndVnode = oldCh[--oldEndIdx]
+    } else if (newStartVnode == null) {
+      newStartVnode = newCh[++newStartIdx]
+    } else if (newEndVnode == null) {
+      newEndVnode = newCh[++newEndIdx]
+    } else if (CheckSameVnode(oldStartVnode, newStartVnode)) {
       console.log('①新前和旧前命中');
       patchVnode(oldStartVnode, newStartVnode)
       //命中后指针位置发生变化
@@ -61,6 +71,32 @@ export default function updateChildren(parentElm, oldCh, newCh) {
       newStartVnode = newCh[++newStartIdx]
     } else {
       //都不匹配
+      if (!keyMap) {
+        keyMap = {}
+        for (let i = oldStartIdx; i <= oldEndIdx; i++) {
+          const key = oldCh[i].key
+          if (key != undefined) {
+            keyMap[key] = i
+          }
+        }
+        console.log(keyMap);
+        const idxInOld = keyMap[newStartVnode.key]
+        console.log(idxInOld);
+        //判断 
+        if (idxInOld == undefined) {
+          // 如果idxInOld是undefined的那么它就是一个全新的项 那么只需要插入就好了
+          //被加入的哪项现在还不是真实dom节点需要createElement创建dom
+          parentElm.insertBefore(createElement(newStartVnode), oldStartVnode.elm)
+        } else {
+          //表示不是全新的项 它和旧的dom有一项相同 那么就是移动
+          const elmToMove = oldCh[idxInOld]
+          patchVnode(elmToMove, newStartVnode)
+          //把这项设置为undefined表示这项已经处理完了
+          oldCh[idxInOld] = undefined
+          parentElm.insertBefore(elmToMove.elm, oldStartVnode.elm)
+        }
+      }
+      newStartVnode = newCh[++newStartIdx]
     }
   }
   // 继续看看有没有剩余的
@@ -68,8 +104,12 @@ export default function updateChildren(parentElm, oldCh, newCh) {
     console.log('新节点还有没有处理的节点');
     //那么就是添加操作
     // 设置一个标杆
-    const before = newCh[newEndIdx + 1] == null ? null : newCh[newEndIdx + 1].elm  //注意双等于的话 undefined等于null
+
+    const before = newCh[newEndIdx + 1] == null ? null : newCh[newEndIdx + 1].elm
+    //注意双等于的话 undefined等于null
+    //如果为null的话就是安排到末尾 有数据的话就是插入到before之前
     //继续处理未上树的节点
+    console.log(before, 11);
     for (let i = newStartIdx; i <= newEndIdx; i++) {
       // insertBefore方法的标杆如果为null的话会自动识别把要创建的节点安排到末尾
       parentElm.insertBefore(createElement(newCh[i]), before)
@@ -78,7 +118,9 @@ export default function updateChildren(parentElm, oldCh, newCh) {
     console.log('旧节点还有没有处理的节点');
     //那么就是删除操作
     for (let i = oldStartIdx; i <= oldEndIdx; i++) {
-      parentElm.removeChild(oldCh[i].elm)
+      if (oldCh[i]) {
+        parentElm.removeChild(oldCh[i].elm)
+      }
     }
   }
 }
